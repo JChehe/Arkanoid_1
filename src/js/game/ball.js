@@ -59,20 +59,20 @@ Ball.prototype = {
 		this._run()
 
 		if(this.isCache) {
-			this._gameFailMove(this.cacheCanvas)
+			this._drawResource(this.cacheCanvas)
 		} else {
-			this._gameFailMove(this.imageObj)
+			this._drawResource(this.imageObj)
 		}
 	},
 
-	_gameFailMove: function(canvas) {
+	_drawResource: function(resouce) {
 		var ctx = this.ctx
 		ctx.save()
 		if(!window.game.isGameOver) {
-			ctx.drawImage(canvas, 0, 0, this.imageObj.width / 2, this.imageObj.height, 
+			ctx.drawImage(resouce, 0, 0, this.imageObj.width / 2, this.imageObj.height, 
 										this.left, this.top, this.width, this.height)
 		} else {
-			ctx.drawImage(canvas, this.imageObj.width / 2, 0, this.imageObj.width / 2, this.imageObj.height, 
+			ctx.drawImage(resouce, this.imageObj.width / 2, 0, this.imageObj.width / 2, this.imageObj.height, 
 										this.left, this.top, this.width, this.height)
 		}
 		ctx.restore()
