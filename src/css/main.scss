@@ -174,6 +174,26 @@ body {
   margin-left: -183px;
 }
 
+.state-indicator {
+  position: absolute;
+  z-index: 0;
+  top: -1000px;
+  left: -1000px;
+}
+
+@media screen and (orientation:portrait) {
+  //竖屏
+  .state-indicator {
+    z-index: 0
+  }
+}
+@media screen and (orientation:landscape) {
+  //横屏
+  .state-indicator {
+    z-index: 1
+  }
+}
+
 
 @media screen and (orientation:landscape) {
   .landscape_tips {

@@ -14,7 +14,6 @@ var detect2RectCollision = require('./utils/detect2RectCollision').detect2RectCo
 var afterCollised = require('./utils/detect2RectCollision').afterCollised
 var preloader = require('./game/preload')
 var sound = require('./game/sound')
-var detectOrient = require('./utils/detectOrient')
 
 
 var canvas = document.getElementById('stage'),
@@ -396,10 +395,25 @@ function gamePauseHandle(isPaused) {
 
 
 
+
+
 // S 横竖屏切换时的处理
-window.addEventListener('resize',function(e) {
-	detectOrient(portraitHanle, landscapeHandle)
-}, false)
+var $temDiv = $('<div class="state-indicator"></div>')
+$(document.body).append($temDiv)
+
+function getDeviceState() {
+	return parseInt($temDiv.css('z-index'))
+}
+
+
+window.addEventListener('resize', function(e) {
+	var deviceState = getDeviceState()
+	if(deviceState === 0) {
+		portraitHanle()
+	} else {
+		landscapeHandle()
+	}
+})
 
 function portraitHanle() {
 	if(!game.isBegin) {
