@@ -17,10 +17,6 @@ var sound = require('./game/sound')
 
 
 
-window.ratio = window.devicePixelRatio || 1;
-if(window.ratio > 2) window.ratio = 2
-
-
 var canvas = document.getElementById('stage'),
 	ctx = canvas.getContext('2d'),
 	bbox = canvas.getBoundingClientRect(),
@@ -31,9 +27,14 @@ var WX_TOPBAR_HEIGHT = 48, // ratio:2时
 	IPHONE6_WIDTH = 375,
 	IPHONE6_HEIGHT = 667;
 
+window.ratio = window.devicePixelRatio || 1;
+if(window.ratio > 2) window.ratio = 2
+
 canvas.width = bg_canvas.width = IPHONE6_WIDTH * ratio
 canvas.height = bg_canvas.height = (IPHONE6_HEIGHT - WX_TOPBAR_HEIGHT) * ratio
 
+// 实际显示的宽(screen.width) / 原本的宽(375)
+window.scaleRatio = (window.screen.width / IPHONE6_WIDTH).toFixed(4)
 
 function Game() {
 	this.elements = []
@@ -45,7 +46,7 @@ function Game() {
 	this.score = 0
 	this.runningTime = 0
 	
-	this.hp = this.BRICK_ROW * this.BRICK_COL
+	this.HP = this.BRICK_ROW * this.BRICK_COL
 	this.isFpsVisible = true
 	this.lastGameTime = 0
 	this.lastFpsTime = 0
@@ -135,7 +136,7 @@ Game.prototype = {
 		})
 
 		this.restartCount++
-		this.hp = this.BRICK_ROW * this.BRICK_COL
+		this.HP = this.BRICK_ROW * this.BRICK_COL
 		this.isGameOver = false
 		this.isPaused = true
 		this.runningTime = 0
@@ -226,7 +227,7 @@ Game.prototype = {
 			game.runningTime = +new Date() - game.runningTime
 			console.log('游戏持续时间：' + game.runningTime / 1000 + '秒')
 		}
-		if(game.score === game.hp) {
+		if(game.score === game.HP) {
 			game.isGameOver = true
 			game.isPaused = true
 			$gameComplete.show().addClass('success')

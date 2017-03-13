@@ -53,8 +53,8 @@ Racket.prototype = {
 			firstFinger = e.touches[0]
 		// mouse need to times ratio
 		var canvasMouse = window.windowToCanvas(canvas, 
-			firstFinger.clientX * window.ratio, 
-			firstFinger.clientY * window.ratio)
+			firstFinger.pageX * window.ratio / window.scaleRatio, 
+			firstFinger.pageY * window.ratio / window.scaleRatio)
 
 		if(this._isPointInShape(canvasMouse)) {
 			this.isDragging = true
@@ -63,11 +63,11 @@ Racket.prototype = {
 			if(this.isDragging) {
 				var bbox = canvas.getBoundingClientRect(),
 					offset = {
-						x: firstFinger.clientX * window.ratio - this.left,
-						y: firstFinger.clientY * window.ratio - this.top
+						x: firstFinger.pageX * window.ratio - this.left,
+						y: firstFinger.pageY * window.ratio - this.top
 					};
 				this._mouseMoveHandler.offset = offset
-
+				// console.log(offset)
 			}
 		} else {
 			this.isDragging = false
@@ -82,9 +82,10 @@ Racket.prototype = {
 			var canvas = this.canvas,
 				firstFinger = e.touches[0],
 				offset = this._mouseMoveHandler.offset,
-				canvasMouse = window.windowToCanvas(canvas, firstFinger.clientX * window.ratio, 
-																						firstFinger.clientY * window.ratio)
-
+				canvasMouse = window.windowToCanvas(canvas, 
+																						firstFinger.pageX * window.ratio, 
+																						firstFinger.pageY * window.ratio)
+			
 			var left = canvasMouse.x - offset.x,
 				top = canvasMouse.y - offset.y
 
@@ -124,8 +125,9 @@ Racket.prototype = {
 
 	draw: function() {
 		var ctx = this.ctx
-		ctx.save()
 
+		ctx.save()
+		
 		// set shadow
 		ctx.shadowOffsetX = this.shadowOffsetX
 		ctx.shadowOffsetY = this.shadowOffsetY
@@ -134,7 +136,6 @@ Racket.prototype = {
 
 		// bottom semicircle
 		this._getPathOfShape()
-
 
 		// fill shape
 		ctx.fillStyle = this.fillStyle
