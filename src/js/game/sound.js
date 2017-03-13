@@ -38,6 +38,13 @@ Sound.prototype = {
 
 	game_success: function() {
 		this._game_success = this.sound.play('game_success')
+	},
+	stop: function(id) {
+		if(id !== undefined || id !== null) {
+			this.sound.stop(id)
+		} else {
+			this.sound.stop()
+		}
 	}
 }
 

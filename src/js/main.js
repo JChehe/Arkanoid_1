@@ -14,7 +14,7 @@ var detect2RectCollision = require('./utils/detect2RectCollision').detect2RectCo
 var afterCollised = require('./utils/detect2RectCollision').afterCollised
 var preloader = require('./game/preload')
 var sound = require('./game/sound')
-
+var detectOrient = require('./utils/detectOrient')
 
 
 var canvas = document.getElementById('stage'),
@@ -45,7 +45,10 @@ function Game() {
 	this.isGameOver = false
 	this.score = 0
 	this.runningTime = 0
-	
+	this.isBegin = false
+	this.START_DELAY = 1880
+	this.timeoutId = null
+
 	this.HP = this.BRICK_ROW * this.BRICK_COL
 	this.isFpsVisible = true
 	this.lastGameTime = 0
@@ -121,7 +124,7 @@ Game.prototype = {
 	},
 
 	start: function() {
-
+		this.isBegin = true
 		this.isPaused = false
 		this.runningTime = +new Date()
 		window.requestAnimationFrame(this._loop.bind(this))
@@ -139,6 +142,7 @@ Game.prototype = {
 		this.HP = this.BRICK_ROW * this.BRICK_COL
 		this.isGameOver = false
 		this.isPaused = true
+		this.isBegin = false
 		this.runningTime = 0
 		this.score = 0
 		this.bricks.length = 0
@@ -149,9 +153,10 @@ Game.prototype = {
 		this.init()
 		this.drawFirstFrame()
 
-		setTimeout(function() {
+		this.timeoutId = setTimeout(function() {
+			self.isBegin = true
 			self.isPaused = false
-		}, 1880)
+		}, this.START_DELAY)
 		
 		sound.ready_go()
 	},
@@ -219,7 +224,7 @@ Game.prototype = {
 	// Game Over 含两种情况：① 中途挂了 ② 通过
 	_detectGameOver: function() {
 		if(!game.ball.isGameOverUp && !game.ball.isGameOverDown) {
-			game.isPaused = true
+			game.pause(true)
 			game.isGameOver = true
 
 			$gameComplete.show().addClass('fail')
@@ -229,7 +234,7 @@ Game.prototype = {
 		}
 		if(game.score === game.HP) {
 			game.isGameOver = true
-			game.isPaused = true
+			game.pause(true)
 			$gameComplete.show().addClass('success')
 			game.runningTime = +new Date() - game.runningTime
 			console.log('游戏持续时间：' + game.runningTime / 1000 + '秒')
@@ -269,10 +274,7 @@ Game.prototype = {
 }
 
 
-
-
 window.game = new Game();
-
 
 function detectRacketAndBallCollide() {
 	var ballAndRacketAngle = detect2RectCollision(game.ball, game.racket)
@@ -345,32 +347,75 @@ var $gameComplete = $('.game_complete'),
 	$stage = $('#stage'),
 	$gameInfo = $('.game_info');
 
-$pauseBtn.on('click', function(e) {
-	gamePauseHandle(!game.isPaused)
-})
 
+// S 开始按钮
 $startBtn.on('click', function(e) {
 	$gameStartPage.hide()
 	$stage.show()
-	
 
 	game.drawFirstFrame()
-	setTimeout(function() {
+	gamePauseHandle(game.isPaused)
+
+	game.timeoutId = setTimeout(function() {
+		game.isPaused = false				
+		game.isBegin = true
 		game.start()
-		gamePauseHandle(game.isPaused)
 		$gameInfo.show()
-	}, 1880)
-	
+		gamePauseHandle(game.isPaused)
+	}, game.START_DELAY)
 
 	sound.ready_go()
 })
+// E 开始按钮
+
+
+// S 暂停按钮
+$pauseBtn.on('click', function(e) {
+	gamePauseHandle(!game.isPaused)
+
+	if(!game.isBegin) {
+		game.start()
+	}
+})
+// E 暂停按钮
+
+
+// S 再玩一次
+$playAgainBtn.on('click', function(e) {
+	$gameComplete.hide()
+	game.restart()
+})
+// E 再玩一次
 
 function gamePauseHandle(isPaused) {
 	$pauseBtn.text(isPaused ? '开始' : '暂停')
 	game.pause(isPaused)
 }
 
-$playAgainBtn.on('click', function(e) {
-	$gameComplete.hide()
-	game.restart()
-})
+
+
+
+
+// S 横竖屏切换时的处理
+window.addEventListener('resize',function(e) {
+	detectOrient(portraitHanle, landscapeHandle)
+}, false)
+
+function portraitHanle() {
+	if(!game.isBegin) {
+		$gameInfo.show()
+	}
+}
+
+function landscapeHandle() {
+	if(window.game) {
+		window.game.pause(true)
+  	gamePauseHandle(true)
+		
+  	if(!window.game.isBegin) {
+			sound.stop()
+			clearTimeout(game.timeoutId)
+  	}
+  }
+}
+// E 横竖屏切换时的处理

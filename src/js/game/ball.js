@@ -11,7 +11,7 @@ var Ball = function(canvas, options) {
 	this.top = options.top
 	this.width = options.width
 	this.height = options.height
-	this.velocityX = options.velocityX || getRandomNumber(-1, -3) * window.ratio
+	this.velocityX = options.velocityX || getRandomNumber(-2, -3) * window.ratio
 	this.velocityY = options.velocityY || getRandomNumber(1, 3) * window.ratio
 	this.fillStyle = options.fillStyle || 'orange'
 	this.isRunning = false
@@ -93,7 +93,6 @@ Ball.prototype = {
 		} 
 
 		if(window.game.isGameOver) {
-
 			this._gameOverMotion()
 		}
 	},
