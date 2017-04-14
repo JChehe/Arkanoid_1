@@ -1,6 +1,6 @@
 # 打砖块小游戏
 
-打完所有砖块后，你就得到“意想不到”的福利哟~
+打完所有砖块后，你就得到“意想不到”的福利哟😍~
 
 该项目主要是在预研『2D碰撞检测』后萌生的想法，[《“等一下，我碰！”——常见的2D碰撞检测》](https://aotu.io/notes/2017/02/16/2d-collision-detection/)。
 
@@ -15,10 +15,12 @@ Designed by [LV](https://github.com/mamboer).
 该游戏有两种玩法：
 
  1. 第一种玩法采用轴对称包围盒(小球、砖块、挡板)的碰撞检测法。
+    - 代码地址：就是当前代码库了😁。
     - 体验链接：http://h5_collision_game_1.aco.aotu.io/
     - 二维码：![玩法一二维码](http://7xq7nb.com1.z0.glb.clouddn.com/liantu.png)
 
  2. 第二种玩法采用轴对称包围盒(小球与砖块)和分离轴定理（小球与可旋转的挡板）两种碰撞检测法。
+    - 代码地址：https://github.com/JChehe/Arkanoid_2
     - 体验链接：http://h5_collision_game_2.aco.aotu.io/
     - 二维码：![玩法一二维码](http://7xq7nb.com1.z0.glb.clouddn.com/liantu%20%281%29.png)
 
@@ -54,3 +56,5 @@ npm start
 # 构建
 npm run build
 ```
+
+peace out!👋
